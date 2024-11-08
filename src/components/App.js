@@ -14,28 +14,42 @@ import Stats from "./Stats";
 // const itemList = [];
 
 export default function App() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(JSON.parse(localStorage.getItem('tripItem')) || []);
 
   function handleClearList() {
     const confirmationMssg = window.confirm("Are you sure you want to delete all items");
-    if (confirmationMssg) setItems([]);
+    if (confirmationMssg) {
+      localStorage.removeItem('tripItem');
+    };
   };
 
   function handleAddItem(item) {
-    setItems((items) => [...items, item])
+    setItems((prevItems) => {
+      const newItems = [...prevItems, item];
+      localStorage.setItem("tripItem", JSON.stringify(newItems));
+      return newItems;
+    });
   }
 
   function handleDeleteItem(id) {
-    setItems((items) => items.filter((item) => item.id !== id));
+    setItems((prevItems) => {
+      const updatedItems = prevItems.filter((item) => item.id !== id);
+      localStorage.setItem("tripItem", JSON.stringify(updatedItems));
+      return updatedItems;
+    });
   }
 
   function handleToggleItem(id) {
-    setItems((items) => items.map((item) => item.id === id ? { ...item, packed: !item.packed } : item))
+    setItems((prevItems) => {
+      const toggledItem = prevItems.map((item) => item.id === id ? { ...item, packed: !item.packed } : item)
+    localStorage.setItem("tripItem", JSON.stringify(toggledItem));
+      return toggledItem;
+    })
   }
 
   return (<div className="app">
     <Logo />
-    <Form onAddItems={handleAddItem} />
+    <Form onAddItems={handleAddItem} itemList = {items}/>
     <PackingList items={items} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} onClearItemList={handleClearList} />
     <Stats items={items} />
   </div>)

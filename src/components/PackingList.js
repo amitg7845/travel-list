@@ -2,25 +2,25 @@ import { useState } from "react";
 import Item from './Item';
 
 
-export default function PackingList({ items, onDeleteItem, onToggleItem, onClearItemList }) {
+export default function PackingList({ items = [], onDeleteItem, onToggleItem, onClearItemList }) {
     // let items = JSON.parse(localStorage.getItem('tripItem'));
     const [sortBy, setSortBy] = useState("packed");
     // Need clarity
-    let sortedItem;
+        let sortedItems;
+        // console.log({items});
 
-    if (sortBy === 'input') sortedItem = sortBy;
-
-    if (sortBy === "description");
-    sortedItem = items
-        .slice().sort((a, b) => a.description.localeCompare(b.description));
-
-    if (sortBy === 'packed');
-    sortedItem = items
-        .slice().sort((a, b) => Number(a.packed) - Number(b.packed))
+    // Determine the sorting criteria
+    if (sortBy === 'input') {
+        sortedItems = items; // Keep original order
+    } else if (sortBy === "description") {
+        sortedItems = items.sort((a, b) => a.description.localeCompare(b.description));
+    } else if (sortBy === 'packed') {
+        sortedItems = items.sort((a, b) => Number(a.packed) - Number(b.packed));
+    }
 
     return (<div className="list">
         <ul>
-            {sortedItem.map((item) => (
+            {sortedItems?.map((item) => (
                 <Item key={item.id} item={item} onDeleteItem={onDeleteItem} onToggleItem={onToggleItem} />
             ))}
         </ul>

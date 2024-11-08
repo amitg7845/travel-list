@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Form({ onAddItems }) {
+export default function Form({ onAddItems,itemList }) {
     const [description, setDescription] = useState("");
     const [quantity, setQuantity] = useState(5);
 
@@ -9,8 +9,6 @@ export default function Form({ onAddItems }) {
         if (!description) return;
 
         const setItem = { description, quantity, packed: false, id: crypto.randomUUID() }
-        // itemList.unshift(setItem);
-        // localStorage.setItem("tripItem", JSON.stringify(itemList));
         onAddItems(setItem);
         setQuantity(1);
         setDescription("");
